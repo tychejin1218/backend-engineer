@@ -1,4 +1,4 @@
-package com.musinsa.assignment.config;
+package com.musinsa.assignment.common.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class ModelMapperConfig {
 
   @Bean
-  public ModelMapper modelMapper(){
+  public ModelMapper modelMapper() {
     return new ModelMapper();
   }
 }

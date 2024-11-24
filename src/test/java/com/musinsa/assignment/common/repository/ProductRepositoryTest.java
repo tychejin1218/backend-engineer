@@ -20,15 +20,33 @@ class ProductRepositoryTest {
   private ProductRepository productRepository;
 
   @Order(1)
-  @DisplayName("findAll_Product 목록 조회")
+  @DisplayName("findAll_상품 목록 조회")
   @Test
   void testFindAll() {
 
     // Given & When
-    List<Product> products = productRepository.findAll();
+    List<Product> productList = productRepository.findAll();
 
     // Then
-    log.debug("products:[{}]", products);
-    assertFalse(products.isEmpty());
+    log.debug("productList:[{}]", productList);
+    assertFalse(productList.isEmpty());
   }
+
+  @Order(2)
+  @DisplayName("findByCategoryOrderByPriceAsc"
+      + "_카테고리를 기준으로 상품 목록을 조회 후 가격으로 오름차순 정렬")
+  @Test
+  void testFindByCategoryOrderByPriceAsc() {
+
+    // Given &
+    String category = "top";
+
+    // When
+    List<Product> productList = productRepository.findByCategoryOrderByPriceAsc(category);
+
+    // Then
+    log.debug("productList:[{}]", productList);
+    assertFalse(productList.isEmpty());
+  }
+
 }

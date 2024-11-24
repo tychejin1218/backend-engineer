@@ -2,9 +2,10 @@ package com.musinsa.assignment.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.musinsa.assignment.type.CategoryType;
+import com.musinsa.assignment.common.type.CategoryType;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,26 @@ public class ProductDto {
   @ToString
   public static class Request {
 
+    private Long id;
     private String brand;
+    private String category;
+    private String categoryName;
+    private int price;
+
+    public static Request of(ProductDto.Request productRequest) {
+      return Request.builder()
+          .brand(productRequest.getBrand())
+          .category(CategoryType.ofName(productRequest.getCategoryName()).getName())
+          .price(productRequest.getPrice())
+          .build();
+    }
+
+    public static Request of(String categoryName) {
+      return Request.builder()
+          .category(CategoryType.ofName(categoryName).getName())
+          .categoryName(categoryName)
+          .build();
+    }
   }
 
   @Getter
@@ -32,9 +52,15 @@ public class ProductDto {
   @ToString
   public static class Response {
 
-    private int id;
+    private Long id;
+
     private String brand;
+
     private String category;
+
+    @JsonIgnore
+    private String categoryName;
+
     private int price;
   }
 
@@ -100,7 +126,7 @@ public class ProductDto {
   @NoArgsConstructor
   @AllArgsConstructor(staticName = "of")
   @ToString
-  public static class CheapestResponse{
+  public static class CheapestResponse {
 
     @JsonProperty("최저가")
     CheapestBrandResponse cheapestBrandResponse;
@@ -163,6 +189,61 @@ public class ProductDto {
           .category(category)
           .categoryName(categoryType.getName())
           .categoryOrder(categoryType.getOrder())
+          .price(price)
+          .formattedPrice(NumberFormat.getNumberInstance().format(price))
+          .build();
+    }
+  }
+
+  @Getter
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @ToString
+  public static class BrandResponse {
+
+    @JsonIgnore
+    private String category;
+
+    @JsonProperty("카테고리")
+    private String categoryName;
+
+    @JsonProperty("최저가")
+    private List<Brand> minPriceList;
+
+    @JsonProperty("최고가")
+    private List<Brand> maxPriceList;
+
+    public static BrandResponse of(CategoryType categoryType,
+        List<Brand> minPriceList, List<Brand> maxPriceList) {
+      return BrandResponse.builder()
+          .category(categoryType.name().toLowerCase(Locale.ROOT))
+          .categoryName(categoryType.getName())
+          .minPriceList(minPriceList)
+          .maxPriceList(maxPriceList)
+          .build();
+    }
+  }
+
+  @Getter
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @ToString
+  public static class Brand {
+
+    @JsonProperty("브랜드")
+    private String brand;
+
+    @JsonIgnore
+    private int price;
+
+    @JsonProperty("가격")
+    private String formattedPrice;
+
+    public static Brand of(String brand, int price) {
+      return Brand.builder()
+          .brand(brand)
           .price(price)
           .formattedPrice(NumberFormat.getNumberInstance().format(price))
           .build();

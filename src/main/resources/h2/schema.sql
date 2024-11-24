@@ -2,8 +2,8 @@
 drop table if exists product;
 
 create table product (
-    id int auto_increment primary key,
-    brand varchar(1) not null,
-    category varchar(50) not null,
-    price int not null
+    id bigint auto_increment primary key,
+    brand char(1) not null,
+    category varchar(20) not null,
+    price integer not null
 );
